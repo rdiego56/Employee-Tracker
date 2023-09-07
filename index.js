@@ -1,10 +1,10 @@
-const mysql = require("mysql2");
+const mysql = require("mysql");
 const inquirer = require("inquirer");
 
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "password",
+    password: "Ninersnation49.$",
     database: "employees_db",
 });
 
@@ -83,6 +83,7 @@ function viewAllDepartments() {
 
 function viewAllRoles() {
     db.query("select * from role", function (err, res) {
+
         console.log("Viewing all roles");
         console.log(res);
         init();
@@ -106,7 +107,9 @@ function addDepartment() {
     }).then((answers) => {
         console.log(answers.departmentName)
         db.query("INSERT INTO department SET ?",
-            [answer.departmentName],
+        {
+            name:answers.departmentName,
+        },
             function (err) {
                 if (err) throw err;
                 init();
@@ -152,7 +155,7 @@ async function addEmployee() {
         {
             first_name: answers.firstName,
             last_name: answers.lastName,
-            role_id: answers.role_Id,
+            role_id: answers.roleId,
             manger_id: answers.managerId,
         },
             // [answer.departmentName],
@@ -168,12 +171,13 @@ async function addEmployee() {
 
 async function updateEmployeeRole() {
     const employee = await queryEmployee();
+    const roles = await queryEmployee();
     inquirer.prompt([
         {
             name: "employeeToUpdate",
             message: " Which employee would you want to update?",
             type: "list",
-            choices: employee.map((employee) => ({ name: employee.first_name + "" + employee.last_name , value: employee.id}) )
+            choices: employee.map((employee) => ({ name: employee.first_name + "" + employee.last_name , value: employee.id})),
 
         },
         {
