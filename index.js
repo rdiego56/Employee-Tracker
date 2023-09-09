@@ -1,11 +1,11 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const inquirer = require("inquirer");
 
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "Ninersnation49.$",
-    database: "employees_db",
+    password: "Diego",
+    database: "employee_db",
 });
 
 async function queryRole() {
@@ -121,6 +121,23 @@ function addDepartment() {
 }
 
 function addRole() {
+    inquirer.prompt({
+        type: "input",
+        name: "roleName",
+        message: " what will be the new Role?"
+    }).then((answers) => {
+        console.log(answers.departmentName)
+        db.query("INSERT INTO role SET ?",
+        {
+            name:answers.departmentName,
+        },
+            function (err) {
+                if (err) throw err;
+                init();
+            }
+        );
+
+    });
 }
 
 async function addEmployee() {
